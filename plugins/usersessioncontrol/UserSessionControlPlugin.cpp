@@ -68,7 +68,11 @@ bool UserSessionControlPlugin::controlFeature( Feature::Uid featureUid, Operatio
 		const auto password = arguments.value( argToString(Argument::Password) ).toByteArray();
 		if( username.isEmpty() )
 		{
-			return false;
+			sendFeatureMessage( FeatureMessage{ featureUid, FeatureMessage::DefaultCommand }
+								.addArgument( Argument::Password, VeyonCore::cryptoCore().encryptPassword( password ) ),
+							computerControlInterfaces );
+
+			return true;
 		}
 
 		sendFeatureMessage( FeatureMessage{ featureUid, FeatureMessage::DefaultCommand }
